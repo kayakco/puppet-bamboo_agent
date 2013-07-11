@@ -1,11 +1,53 @@
+# Configures a single agent on the node.
+#
+# === Parameters
+#
+# [id] A unique-to-this-node name for this agent. Eg: "1","A","jimmy"
+#
+# [home] Path to agent's home directory (will be created)
+#
+# [wrapper_conf_properties] List of properties that should be
+#   overridden in the agent's wrapper.conf with Augeas.
+#
+# [manage_capabilities] Whether to manage this agent's capabilities
+#   using the bamboo-capabilities.properties file (search the Bamboo
+#   docs for "bamboo-capabilities.properties" for information about
+#   configuring agents this way)
+#
+# [capabilities] Hash of capabilities to set for this agent. Only
+#   applies if $manage_capabilities is true.
+#
+# [expand_id_macros] When true, any occurrences of the string "!ID!"
+#   in the capabilities hash will be replaced with $id
+#
+# [private_tmp_dir] Whether to configure this agent to use a private
+#   tmp directory, instead of the system tmp directory.
+#
+#
+# === Examples
+#
+# Suppose an agent on the node "somehost" is defined with the
+# following capabilities:
+#
+# bamboo_agent::agent { '1':
+#   ...
+#   manage_capabilities => true,
+#   capabilities => {
+#     'agentkey' => "${::hostname}-!ID!",
+#   },
+#   expand_id_macros => true,
+# }
+#
+# The agent would have the custom capability "agentkey" set to
+# "somehost-1".
+#
 define bamboo_agent::agent(
   $id           = $title,
   $home         = "${bamboo_agent::install_dir}/agent${title}-home",
   $wrapper_conf_properties = {},
   $manage_capabilities     = false,
   $capabilities            = {},
-  $expand_id_macros        = true,  # Replace any instances of "!ID!"
-                                    # in capabilities with $id
+  $expand_id_macros        = true,
   $private_tmp_dir         = false,
 ){
 
@@ -52,9 +94,6 @@ define bamboo_agent::agent(
       'set.TMP'                   => $agent_tmp,
       'wrapper.java.additional.3' => "-Djava.io.tmpdir=${agent_tmp}",
     }
-
-#    notice("Adding properties to wrapper.conf: ${tmp_dir_props}")
-
     bamboo_agent::private_tmp { $agent_tmp: require => $install }
   }else{
     $tmp_dir_props = {}
@@ -67,6 +106,5 @@ define bamboo_agent::agent(
     before     => $service,
     require    => $install,
   }
-
 
 }

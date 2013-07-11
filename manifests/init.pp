@@ -1,13 +1,79 @@
-# A module for installing multiple Bamboo agents on a node. Uses
-# Puppet service type to ensure that agents are running.
+# A module for installing multiple Bamboo agents on a node.
 #
-# Can be used to:
-#   * install agents
-#   * set properties in a agent's wrapper.conf
-#   * granularly configure agent capabilities
-#   * give agents local tmp directories inside home dir. (Useful
-#     if you are doing large subversion checkouts on a machine with
-#     limited space in / or /tmp filesystems)
+# === Parameters
+#
+# [server_host] Hostname of your Bamboo server. Required.
+#
+# [server_port] Port where Bamboo server is listening.
+#
+# [agents] A list of agent names, or hash of agent names and
+#   parameters, describing the agents that should be installed. See
+#   the examples, and the agent type, for more information.
+#
+# [agent_defaults] Default parameters for the agent type.
+#
+# [install_dir] The parent directory where agents should be installed.
+#
+# [user_name] Name of the bamboo system user.
+#
+# [manage_user] Whether this module should declare the bamboo user.
+#
+# [user_options] Advanced user parameters. Only applies if manage_user
+#   is true. See the r9utils::system_user type for more details.
+#
+# [java_classname] The name of a Java class that should be applied
+#   before installing agents.
+#
+# [java_command] Java command to use when installing agents.
+#
+# [default_capabilities] Set of default agent capabilities.
+#
+#
+# === Examples
+#
+# Install a single Bamboo agent in /usr/local/bamboo:
+#
+# class { 'bamboo_agent':
+#   server_host => 'your.bamboo.server',
+# }
+#
+# Install two Bamboo agents, named "1" and "2", in /home/bamboo:
+#
+# class { 'bamboo_agent':
+#   server_host => 'your.bamboo.server',
+#   agents      => [1,2],
+#   install_dir => '/home/bamboo',
+# }
+#
+# Install two Bamboo agents. Give agent 1 extra heap space and give
+# agent 2 some custom capabilities.
+#
+# class { 'bamboo_agent':
+#   server_host => 'your.bamboo.server',
+#   agents      => {
+#     '1' => {
+#       'wrapper_conf_properties' => {
+#          'wrapper.java.maxmemory' => '2048',
+#       }
+#     },
+#     '2' => {
+#       'manage_capabilities' => true,
+#       'capabilities' => {
+#          'system.builder.command.Bash' => '/bin/bash',
+#          'hostname' => $::hostname,
+#          'os' => $::operatingsystem,
+#       }
+#     }
+#   },
+# }
+#
+# Ensure that your preferred Java class has been applied before
+# attempting to install any Bamboo agents.
+#
+# class { 'bamboo_agent':
+#   server_host => 'your.bamboo.server',
+#   java_class  => 'my_favorite_java',
+# }
 #
 class bamboo_agent(
   $server_host,
@@ -17,8 +83,8 @@ class bamboo_agent(
   $agent_defaults = {},
   $install_dir    = '/usr/local/bamboo',
 
-  $manage_user    = true,
   $user_name      = 'bamboo',
+  $manage_user    = true,
   $user_options   = {
     'shell' => '/bin/bash',
   },
@@ -26,20 +92,7 @@ class bamboo_agent(
   $java_classname = undef,
   $java_command   = 'java',
 
-  # Default capabilities for the agents on this node.
-  # Only matters if capabilities are configured to be managed.
   $default_capabilities = {},
-
-  # Example set of default capabilities (can be overridden per agent).
-  # {
-  #   'dedicated'                   => false,
-  #   'hostname'                    => $::hostname,
-  #   'agentid'                     => '!ID!',
-  #   'agentkey'                    => "${::hostname}-!ID!",
-  #   'system.builder.command.Bash' => '/bin/bash',
-  # }
-  # (!ID! is expanded to match the agent's resource title / ID parameter)
-  #
 ){
 
   $user_group = pick($user_options['group'],$user_name)
