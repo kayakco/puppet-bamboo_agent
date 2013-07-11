@@ -1,6 +1,8 @@
 bamboo_agent
 ============
 
+[![Build Status](https://travis-ci.org/kayakco/puppet-bamboo_agent.png)](https://travis-ci.org/kayakco/puppet-bamboo_agent)
+
 A Puppet module for managing Bamboo agents.
 
 This module can be used to:
