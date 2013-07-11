@@ -8,4 +8,5 @@ description 'Fine-grained control of Bamboo agents on a node'
 project_page 'https://github.com/kayakco/bamboo_agent'
 
 dependency 'puppetlabs/stdlib', '>= 3.2.0'
-dependency 'kayak/r9util', '>= 0.0.1'
+# Uncomment when r9util is published on the forge.
+# dependency 'kayak/r9util', '>= 0.0.1'
