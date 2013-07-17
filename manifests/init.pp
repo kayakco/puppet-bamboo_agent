@@ -71,8 +71,8 @@
 # attempting to install any Bamboo agents.
 #
 # class { 'bamboo_agent':
-#   server_host => 'your.bamboo.server',
-#   java_class  => 'my_favorite_java',
+#   server_host     => 'your.bamboo.server',
+#   java_classname  => 'my_favorite_java',
 # }
 #
 class bamboo_agent(
