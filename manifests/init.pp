@@ -96,7 +96,11 @@ class bamboo_agent(
 ){
 
   $user_group = pick($user_options['group'],$user_name)
-  if $manage_user {
+
+  # Workaround for http://projects.puppetlabs.com/issues/16178
+  $real_manage_user = str2bool("${manage_user}")
+
+  if $real_manage_user {
     create_resources('r9util::system_user',
                       { "${user_name}" => $user_options })
   }

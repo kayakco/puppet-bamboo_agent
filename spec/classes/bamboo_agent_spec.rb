@@ -109,10 +109,21 @@ PUPPET
     end
   end
 
-  context 'do not create user' do
+  context 'do not create user (boolean parameter)' do
     let(:params) do {
       :server_host => 'bamboo.com',
       :manage_user => false,
+    } end
+
+    it do
+      should_not contain_r9util__system_user('bamboo')
+    end
+  end
+
+  context 'do not create user (string parameter)' do
+    let(:params) do {
+      :server_host => 'b',
+      :manage_user => 'false',
     } end
 
     it do
@@ -126,7 +137,8 @@ PUPPET
       :user_name    => 'zenu',
       :user_options => {
          'group' => 'users',
-      }
+      },
+      :manage_user => 'true',
     } end
 
     it do
