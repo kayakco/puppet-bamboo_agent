@@ -89,7 +89,7 @@ class bamboo_agent(
     'shell' => '/bin/bash',
   },
 
-  $java_classname = undef,
+  $java_classname = 'java',
   $java_command   = 'java',
 
   $default_capabilities = {},
@@ -126,11 +126,13 @@ class bamboo_agent(
     group => $user_group,
   }
 
-  if $java_classname != undef {
+  if $java_classname != 'UNDEFINED' {
     include $java_classname
     Bamboo_Agent::Agent <||> {
       require => Class[$java_classname]
     }
+  }else{
+    warning('Java classname set to UNDEFINED, not including or requiring Java')
   }
 
   $agent_list = normalize_agents_arg($agents)

@@ -1,7 +1,16 @@
 require 'spec_helper'
 
 describe 'bamboo_agent' do
-  let(:facts) do { :r9util_download_curl_version => '2' } end
+  
+  let(:facts) do
+    {
+      # puppetlabs/java facts
+      :osfamily => 'Debian',
+      :lsbdistcodename => 'natty',
+      # kayakco/r9util facts
+      :r9util_download_curl_version => '2'
+    }
+  end
 
   context 'default parameters' do
     let(:params) do { :server_host => 'bamboo.com' } end
@@ -24,6 +33,7 @@ describe 'bamboo_agent' do
         :group => 'bamboo',
       })
       should contain_bamboo_agent__agent('1')
+      should include_class('java')
     end
   end
 
@@ -93,19 +103,33 @@ describe 'bamboo_agent' do
 
 
   context 'supply java classname' do
+    let(:facts) do { :r9util_download_curl_version => '2' } end
     let(:pre_condition) do <<PUPPET
-class java {
+class myjava {
 }
 PUPPET
     end
 
     let(:params) do {
       :server_host => 'bamboo.com',
-      :java_classname => 'java',
+      :java_classname => 'myjava',
     } end
 
     it do
-      should include_class('java')
+      should include_class('myjava')
+      should_not include_class('java')
+    end
+  end
+
+  context 'set java_classname to undefined' do
+    let(:facts) do { :r9util_download_curl_version => '2' } end
+    let(:params) do {
+      :server_host => 'bamboo.com',
+      :java_classname => 'UNDEFINED',
+    } end
+
+    it do
+      should_not include_class('java')
     end
   end
 

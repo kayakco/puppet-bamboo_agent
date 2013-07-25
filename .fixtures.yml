@@ -3,5 +3,6 @@ fixtures:
     bamboo_agent: "#{source_dir}"
   repositories:
     stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
+    java: "git://github.com/puppetlabs/puppetlabs-java"
     r9util: "git://github.com/kayakco/r9util"
 
