@@ -4,7 +4,7 @@
 #
 # [server_host] Hostname of your Bamboo server. Required.
 #
-# [server_port] Port where Bamboo server is listening.
+# [server_port] Port where Bamboo server is listening. Default 8085.
 #
 # [agents] A list of agent names, or hash of agent names and
 #   parameters, describing the agents that should be installed. See
