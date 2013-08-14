@@ -13,7 +13,7 @@ describe 'bamboo_agent' do
   end
 
   context 'default parameters' do
-    let(:params) do { :server_host => 'bamboo.com' } end
+    let(:params) do { :server => 'bamboo.com' } end
 
     it do
       should contain_r9util__system_user('bamboo')
@@ -40,7 +40,7 @@ describe 'bamboo_agent' do
   context 'single agent id' do
     let(:params) do 
       {
-        :server_host    => 'bamboo.com',
+        :server    => 'bamboo.com',
         :agents         => 'foo',
       }
     end
@@ -53,7 +53,7 @@ describe 'bamboo_agent' do
   context 'multiple agents as array' do
     let(:params) do 
       {
-        :server_host    => 'bamboo.com',
+        :server    => 'bamboo.com',
         :agents         => ['1','2'],
         :agent_defaults => {
           'manage_capabilities' => true,
@@ -70,7 +70,7 @@ describe 'bamboo_agent' do
   context 'multiple agents as hash' do
     let(:params) do
       {
-        :server_host    => 'bamboo.com',
+        :server    => 'bamboo.com',
         :agents         => {
           '1' => nil,
           '2' => {
@@ -111,7 +111,7 @@ PUPPET
     end
 
     let(:params) do {
-      :server_host => 'bamboo.com',
+      :server => 'bamboo.com',
       :java_classname => 'myjava',
     } end
 
@@ -124,7 +124,7 @@ PUPPET
   context 'set java_classname to undefined' do
     let(:facts) do { :r9util_download_curl_version => '2' } end
     let(:params) do {
-      :server_host => 'bamboo.com',
+      :server => 'bamboo.com',
       :java_classname => 'UNDEFINED',
     } end
 
@@ -135,7 +135,7 @@ PUPPET
 
   context 'do not create user (boolean parameter)' do
     let(:params) do {
-      :server_host => 'bamboo.com',
+      :server => 'bamboo.com',
       :manage_user => false,
     } end
 
@@ -146,7 +146,7 @@ PUPPET
 
   context 'do not create user (string parameter)' do
     let(:params) do {
-      :server_host => 'b',
+      :server => 'b',
       :manage_user => 'false',
     } end
 
@@ -157,7 +157,7 @@ PUPPET
 
   context 'special user options' do
     let(:params) do {
-      :server_host  => 'bamboo.com',
+      :server  => 'bamboo.com',
       :user_name    => 'zenu',
       :user_options => {
          'group' => 'users',

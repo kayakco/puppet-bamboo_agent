@@ -2,7 +2,7 @@
 #
 # === Parameters
 #
-# [server_host] Hostname of your Bamboo server. Required.
+# [server] Hostname of your Bamboo server. Required.
 #
 # [server_port] Port where Bamboo server is listening. Default 8085.
 #
@@ -34,13 +34,13 @@
 # Install a single Bamboo agent in /usr/local/bamboo:
 #
 # class { 'bamboo_agent':
-#   server_host => 'your.bamboo.server',
+#   server => 'your.bamboo.server',
 # }
 #
 # Install two Bamboo agents, named "1" and "2", in /home/bamboo:
 #
 # class { 'bamboo_agent':
-#   server_host => 'your.bamboo.server',
+#   server      => 'your.bamboo.server',
 #   agents      => [1,2],
 #   install_dir => '/home/bamboo',
 # }
@@ -49,8 +49,8 @@
 # agent 2 some custom capabilities.
 #
 # class { 'bamboo_agent':
-#   server_host => 'your.bamboo.server',
-#   agents      => {
+#   server => 'your.bamboo.server',
+#   agents => {
 #     '1' => {
 #       'wrapper_conf_properties' => {
 #          'wrapper.java.maxmemory' => '2048',
@@ -71,12 +71,12 @@
 # attempting to install any Bamboo agents.
 #
 # class { 'bamboo_agent':
-#   server_host     => 'your.bamboo.server',
+#   server          => 'your.bamboo.server',
 #   java_classname  => 'my_favorite_java',
 # }
 #
 class bamboo_agent(
-  $server_host,
+  $server,
   $server_port    = 8085,
 
   $agents         = [1],
@@ -112,7 +112,7 @@ class bamboo_agent(
     mode   => '0755',
   }
 
-  $server_url    = "http://${server_host}:${server_port}"
+  $server_url    = "http://${server}:${server_port}"
   $installer_jar = "${install_dir}/bamboo-agent-installer.jar"
 
   r9util::download { 'bamboo-agent-installer':
