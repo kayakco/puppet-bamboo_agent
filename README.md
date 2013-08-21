@@ -6,11 +6,11 @@ bamboo_agent
 A Puppet module for managing Bamboo agents.
 
 It can:
-  - Install multiple agents side-by-side on a node
-  - Manage agent capabilities
-  - Set properties in an agent's wrapper.conf
-  - Ensure agents are running
-  - Ensure agents are started up after a reboot
+  -   Install multiple agents side-by-side on a node
+  -   Manage agent capabilities
+  -   Set properties in an agent's wrapper.conf
+  -   Ensure agents are running
+  -   Ensure agents are started up after a reboot
 
 Examples
 --------
