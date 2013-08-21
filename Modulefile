@@ -1,5 +1,5 @@
 name    'kayak-bamboo_agent'
-version '0.0.5'
+version '0.0.7'
 source  'git://github.com/kayakco/puppet-bamboo_agent.git'
 author  'kayak'
 license 'Apache License, Version 2.0'
