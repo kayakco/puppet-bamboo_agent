@@ -37,3 +37,4 @@ PLATFORMS
 DEPENDENCIES
   puppet (~> 3.2.3)
   puppetlabs_spec_helper
+  rake
