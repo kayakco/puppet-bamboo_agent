@@ -5,12 +5,14 @@ define bamboo_agent::wrapper_conf(
   $properties = {},
 ){
 
-  file { "${home}/conf/wrapper.conf":
+  $path = "${home}/conf/wrapper.conf"
+
+  file { $path:
     owner => $bamboo_agent::user_name,
     group => $bamboo_agent::user_group,
   }
   ->
-  r9util::java_properties { "${home}/conf/wrapper.conf":
+  r9util::java_properties { $path:
     properties => $properties,
   }
 

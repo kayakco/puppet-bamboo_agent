@@ -110,4 +110,18 @@ PUPPET
       })
     end
   end
+
+  context 'with refresh_service' do
+    let :title do '1' end
+    let :params do {
+      :manage_capabilities => true,
+      :refresh_service => true,
+    }
+    end
+
+    it do
+      should contain_bamboo_agent__wrapper_conf('1').that_notifies('Bamboo_Agent::Service[1]')
+      should contain_bamboo_agent__capabilities('1').that_notifies('Bamboo_Agent::Service[1]')
+    end
+  end
 end

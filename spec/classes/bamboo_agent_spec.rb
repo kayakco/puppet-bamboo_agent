@@ -33,7 +33,7 @@ describe 'bamboo_agent' do
         :group => 'bamboo',
       })
       should contain_bamboo_agent__agent('1')
-      should include_class('java')
+      should contain_class('java')
     end
   end
 
@@ -116,8 +116,8 @@ PUPPET
     } end
 
     it do
-      should include_class('myjava')
-      should_not include_class('java')
+      should contain_class('myjava')
+      should_not contain_class('java')
     end
   end
 
@@ -129,7 +129,7 @@ PUPPET
     } end
 
     it do
-      should_not include_class('java')
+      should_not contain_class('java')
     end
   end
 

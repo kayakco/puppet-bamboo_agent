@@ -23,6 +23,8 @@
 # [private_tmp_dir] Whether to configure this agent to use a private
 #   tmp directory, instead of the system tmp directory.
 #
+# [refresh_service] Whether to restart the agent after a change to
+#   bamboo-capabilities.properties or wrapper.conf.
 #
 # === Examples
 #
@@ -49,6 +51,7 @@ define bamboo_agent::agent(
   $capabilities            = {},
   $expand_id_macros        = true,
   $private_tmp_dir         = false,
+  $refresh_service         = false,
 ){
 
   validate_hash($wrapper_conf_properties)
@@ -69,12 +72,14 @@ define bamboo_agent::agent(
     id     => $id,
     home   => $home,
   }
+
   $install = Bamboo_Agent::Install["install-agent-${id}"]
 
   bamboo_agent::service { $id:
     home    => $home,
     require => $install,
   }
+
   $service = Bamboo_Agent::Service[$id]
 
   if $manage_capabilities {
@@ -85,6 +90,10 @@ define bamboo_agent::agent(
       expand_id_macros => $expand_id_macros,
       before           => $service,
       require          => $install,
+    }
+
+    if $refresh_service {
+       Bamboo_Agent::Capabilities[$id] ~> Bamboo_Agent::Service[$id]
     }
   }
 
@@ -107,4 +116,7 @@ define bamboo_agent::agent(
     require    => $install,
   }
 
+  if $refresh_service {
+    Bamboo_Agent::Wrapper_Conf[$id] ~> Bamboo_Agent::Service[$id]
+  }
 }
