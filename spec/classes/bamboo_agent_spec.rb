@@ -4,11 +4,9 @@ describe 'bamboo_agent' do
   
   let(:facts) do
     {
-      # puppetlabs/java facts
+      # For puppetlabs/java facts
       :osfamily => 'Debian',
       :lsbdistcodename => 'natty',
-      # kayakco/r9util facts
-      :r9util_download_curl_version => '2'
     }
   end
 
@@ -103,7 +101,6 @@ describe 'bamboo_agent' do
 
 
   context 'supply java classname' do
-    let(:facts) do { :r9util_download_curl_version => '2' } end
     let(:pre_condition) do <<PUPPET
 class myjava {
 }
@@ -122,7 +119,6 @@ PUPPET
   end
 
   context 'set java_classname to undefined' do
-    let(:facts) do { :r9util_download_curl_version => '2' } end
     let(:params) do {
       :server => 'bamboo.com',
       :java_classname => 'UNDEFINED',
