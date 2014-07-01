@@ -16,6 +16,7 @@ define bamboo_agent::private_tmp(
   }
 
   cron { "${path}-tmp-cleanup":
+    minute  => 15,
     command => "/usr/sbin/tmpwatch 10d ${path}",
     require => [Package['tmpwatch'],
                 File[$path]],

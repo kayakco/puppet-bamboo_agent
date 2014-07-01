@@ -22,7 +22,8 @@ PUPPET
     })
     should contain_package('tmpwatch')
     should contain_cron('/footmp-tmp-cleanup').with({
-      :command => '/usr/sbin/tmpwatch 10d /footmp'
+      :command => '/usr/sbin/tmpwatch 10d /footmp',
+      :minute  => 15,
     })
   end
 end
