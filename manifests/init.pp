@@ -77,7 +77,8 @@
 #
 class bamboo_agent(
   $server,
-  $server_port    = 8085,
+  $server_port     = 8085,
+  $server_protocol = 'http',
 
   $agents         = [1],
   $agent_defaults = {},
@@ -112,7 +113,7 @@ class bamboo_agent(
     mode   => '0755',
   }
 
-  $server_url    = "http://${server}:${server_port}"
+  $server_url    = "${server_protocol}://${server}:${server_port}"
   $installer_jar = "${install_dir}/bamboo-agent-installer.jar"
 
   r9util::download { 'bamboo-agent-installer':
