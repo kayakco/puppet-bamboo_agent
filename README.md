@@ -20,14 +20,14 @@ Examples
 Install a single Bamboo agent in /usr/local/bamboo.
 
     class { 'bamboo_agent':
-      server => 'your.bamboo.server.com',
+      server_url => 'http://your.bamboo.server:8085.com',
     }
 
 
 Install two Bamboo agents in /home/bamboo.
 
     class { 'bamboo_agent':
-      server      => 'your.bamboo.server',
+      server_url  => 'http://your.bamboo.server:8085',
       agents      => [1,2],
       install_dir => '/home/bamboo',
     }
@@ -40,8 +40,8 @@ Install two Bamboo agents. Give agent 1 extra heap space by setting
 the **wrapper.java.maxmemory** property in wrapper.conf.
 
     class { 'bamboo_agent':
-      server => 'your.bamboo.server',
-      agents => {
+      server_url => 'http://your.bamboo.server:8085',
+      agents     => {
         '1' => {
           'wrapper_conf_properties' => {
              'wrapper.java.maxmemory' => '4096',
@@ -54,8 +54,8 @@ the **wrapper.java.maxmemory** property in wrapper.conf.
 Install two Bamboo agents. Give the second agent some custom capabilities.
 
     class { 'bamboo_agent':
-      server => 'your.bamboo.server',
-      agents => {
+      server_url => 'http://your.bamboo.server:8085',
+      agents     => {
         '1' => {},
         '2' => {
           'manage_capabilities' => true,
@@ -73,7 +73,7 @@ capabilities from the previous example, as well as a custom capability called
 **reserved**. Make **reserved** default to false, but true for agent 2.
 
     class { 'bamboo_agent':
-      server               => 'your.bamboo.server',
+      server_url           => 'http://your.bamboo.server:8085',
       agent_defaults       => {
         'manage_capabilities' => true,
       },
@@ -104,7 +104,7 @@ Capabilities are configured using the [bamboo-capabilities.properties file](http
 It is strongly recommended to use [Hiera automatic parameter lookup](http://docs.puppetlabs.com/hiera/1/puppet.html#automatic-parameter-lookup) to configure agents. Below is the final example from above, translated into Hiera configuration format:
 
     ---
-    bamboo_agent::server: your.bamboo.server
+    bamboo_agent::server_url: http://your.bamboo.server:8085
     bamboo_agent::agent_defaults:
       manage_capabilities: true
     bamboo_agent::default_capabilities:

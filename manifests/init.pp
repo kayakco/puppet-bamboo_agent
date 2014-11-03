@@ -2,9 +2,7 @@
 #
 # === Parameters
 #
-# [server] Hostname of your Bamboo server. Required.
-#
-# [server_port] Port where Bamboo server is listening. Default 8085.
+# [server_url] URL of the web interface of your Bamboo server. Required.
 #
 # [agents] A list of agent names, or hash of agent names and
 #   parameters, describing the agents that should be installed. See
@@ -28,19 +26,28 @@
 #
 # [default_capabilities] Set of default agent capabilities.
 #
+# ******* DEPRECATED DEPRECATED DEPRECATED ********
+# The following params are deprecated, do not use!
+#
+# [server] Hostname of your Bamboo server.
+#
+# [server_port] Port where Bamboo server is listening. Default 8085
+#
+# [server_protocol] Protocol to use for bamboo server. Default "http"
+#
 #
 # === Examples
 #
 # Install a single Bamboo agent in /usr/local/bamboo:
 #
 # class { 'bamboo_agent':
-#   server => 'your.bamboo.server',
+#   server_url => 'http://your.bamboo.server:8085',
 # }
 #
 # Install two Bamboo agents, named "1" and "2", in /home/bamboo:
 #
 # class { 'bamboo_agent':
-#   server      => 'your.bamboo.server',
+#   server_url  => 'http://your.bamboo.server:8085',
 #   agents      => [1,2],
 #   install_dir => '/home/bamboo',
 # }
@@ -49,7 +56,7 @@
 # agent 2 some custom capabilities.
 #
 # class { 'bamboo_agent':
-#   server => 'your.bamboo.server',
+#   server_url => 'http://your.bamboo.server:8085',
 #   agents => {
 #     '1' => {
 #       'wrapper_conf_properties' => {
@@ -71,14 +78,12 @@
 # attempting to install any Bamboo agents.
 #
 # class { 'bamboo_agent':
-#   server          => 'your.bamboo.server',
-#   java_classname  => 'my_favorite_java',
+#   server_url     => 'http://your.bamboo.server:8085',
+#   java_classname => 'my_favorite_java',
 # }
 #
 class bamboo_agent(
-  $server,
-  $server_port     = 8085,
-  $server_protocol = 'http',
+  $server_url      = 'UNSET',
 
   $agents         = [1],
   $agent_defaults = {},
@@ -94,6 +99,11 @@ class bamboo_agent(
   $java_command   = 'java',
 
   $default_capabilities = {},
+
+  # Deprecated! Please use $server_url instead.
+  $server          = 'UNSET',
+  $server_port     = 8085,
+  $server_protocol = 'http',
 ){
 
   $user_group = pick($user_options['group'],$user_name)
@@ -113,11 +123,28 @@ class bamboo_agent(
     mode   => '0755',
   }
 
-  $server_url    = "${server_protocol}://${server}:${server_port}"
+  if $server_url == 'UNSET' {
+    if $server == 'UNSET' {
+      fail('Parameter $server_url is required!')
+
+    } else {
+      $dep_msg = 'Warning: Parameters $server, $server_port, and $server_protocol are deprecated in the bamboo_agent module, please use $server_url instead'
+
+      notify { 'bamboo-module-deprecation-warning':
+        message  => $dep_msg,
+        loglevel => 'warning',
+      }
+    }
+
+    $final_server_url = "${server_protocol}://${server}:${server_port}"
+  } else {
+    $final_server_url = $server_url
+  }
+
   $installer_jar = "${install_dir}/bamboo-agent-installer.jar"
 
   r9util::download { 'bamboo-agent-installer':
-    url  => "${server_url}/agentServer/agentInstaller",
+    url  => "${final_server_url}/agentServer/agentInstaller",
     path => $installer_jar,
   }
   ->

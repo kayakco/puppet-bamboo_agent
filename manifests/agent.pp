@@ -80,15 +80,13 @@ define bamboo_agent::agent(
     require => $install,
   }
 
-  $service = Bamboo_Agent::Service[$id]
-
   if $manage_capabilities {
     bamboo_agent::capabilities { $id:
       home             => $home,
       capabilities     => merge($bamboo_agent::default_capabilities,
                                 $capabilities),
       expand_id_macros => $expand_id_macros,
-      before           => $service,
+      before           => Bamboo_Agent::Service[$id],
       require          => $install,
     }
 
@@ -112,7 +110,7 @@ define bamboo_agent::agent(
     home       => $home,
     properties => merge($tmp_dir_props,
                         $wrapper_conf_properties),
-    before     => $service,
+    before     => Bamboo_Agent::Service[$id],
     require    => $install,
   }
 

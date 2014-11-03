@@ -7,7 +7,7 @@ class bamboo_agent {
   $user_group = 'zenu'
   $java_command = 'j 2'
   $installer_jar = '/tmp/b. .jar'
-  $server_url = 'http://b.com' 
+  $final_server_url = 'http://b.com'
 }
 include bamboo_agent
 PUPPET

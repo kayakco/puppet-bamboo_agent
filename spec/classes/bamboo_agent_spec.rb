@@ -11,7 +11,7 @@ describe 'bamboo_agent' do
   end
 
   context 'default parameters' do
-    let(:params) do { :server => 'bamboo.com' } end
+    let(:params) do { :server_url => 'https://bamboo.com:8000/bamboo' } end
 
     it do
       should contain_r9util__system_user('bamboo')
@@ -22,7 +22,7 @@ describe 'bamboo_agent' do
         :group  => 'bamboo',
       })
       should contain_r9util__download('bamboo-agent-installer').with({
-        :url => 'http://bamboo.com:8085/agentServer/agentInstaller',
+        :url => 'https://bamboo.com:8000/bamboo/agentServer/agentInstaller',
         :path => '/usr/local/bamboo/bamboo-agent-installer.jar',
       })
       should contain_file('/usr/local/bamboo/bamboo-agent-installer.jar').with({
@@ -32,6 +32,7 @@ describe 'bamboo_agent' do
       })
       should contain_bamboo_agent__agent('1')
       should contain_class('java')
+      should_not contain_notify('bamboo-module-deprecation-warning')
     end
   end
 
@@ -51,7 +52,7 @@ describe 'bamboo_agent' do
   context 'multiple agents as array' do
     let(:params) do 
       {
-        :server    => 'bamboo.com',
+        :server_url => 'bamboo.com',
         :agents         => ['1','2'],
         :agent_defaults => {
           'manage_capabilities' => true,
@@ -68,7 +69,7 @@ describe 'bamboo_agent' do
   context 'multiple agents as hash' do
     let(:params) do
       {
-        :server    => 'bamboo.com',
+        :server_url     => 'bamboo.com',
         :agents         => {
           '1' => nil,
           '2' => {
@@ -108,7 +109,7 @@ PUPPET
     end
 
     let(:params) do {
-      :server => 'bamboo.com',
+      :server_url => 'bamboo.com',
       :java_classname => 'myjava',
     } end
 
@@ -120,7 +121,7 @@ PUPPET
 
   context 'set java_classname to undefined' do
     let(:params) do {
-      :server => 'bamboo.com',
+      :server_url => 'bamboo.com',
       :java_classname => 'UNDEFINED',
     } end
 
@@ -131,7 +132,7 @@ PUPPET
 
   context 'do not create user (boolean parameter)' do
     let(:params) do {
-      :server => 'bamboo.com',
+      :server_url => 'bamboo.com',
       :manage_user => false,
     } end
 
@@ -142,7 +143,7 @@ PUPPET
 
   context 'do not create user (string parameter)' do
     let(:params) do {
-      :server => 'b',
+      :server_url => 'b',
       :manage_user => 'false',
     } end
 
@@ -153,7 +154,7 @@ PUPPET
 
   context 'special user options' do
     let(:params) do {
-      :server  => 'bamboo.com',
+      :server_url   => 'bamboo.com',
       :user_name    => 'zenu',
       :user_options => {
          'group' => 'users',
@@ -163,6 +164,44 @@ PUPPET
 
     it do
       should contain_r9util__system_user('zenu').with_group('users')
+    end
+  end
+
+  context 'with deprecated server options' do
+    let (:params) do {
+      :server          => 'my.bamboo.server',
+      :server_port     => '9000',
+      :server_protocol => 'idk',
+    } end
+
+    it 'should log a warning but construct expected url' do
+      should contain_r9util__download('bamboo-agent-installer').with({
+        :url => 'idk://my.bamboo.server:9000/agentServer/agentInstaller',
+      })
+      should contain_notify('bamboo-module-deprecation-warning').with_message(/\$server_url/)
+    end
+  end
+
+  context 'with deprecated server options (default port & protocol)' do
+    let (:params) do {
+      :server => 'my.bamboo.server',
+    } end
+
+    it 'should log a warning but construct expected url' do
+      should contain_r9util__download('bamboo-agent-installer').with({
+        :url => 'http://my.bamboo.server:8085/agentServer/agentInstaller',
+      })
+     should contain_notify('bamboo-module-deprecation-warning').with_message(/\$server_url/)
+    end
+  end
+
+  context 'without server or server_url options' do
+    let (:params) do {} end
+
+    it 'should fail' do
+      expect {
+        should contain_bamboo_agent__agent('1')
+      }.to raise_error(Puppet::Error, /\$server_url is required/)
     end
   end
 end

@@ -6,7 +6,7 @@ define bamboo_agent::install(
 ){
   $java         = shellquote($bamboo_agent::java_command)
   $jar          = shellquote($bamboo_agent::installer_jar)
-  $register_url = shellquote("${bamboo_agent::server_url}/agentServer/")
+  $register_url = shellquote("${bamboo_agent::final_server_url}/agentServer/")
   $quoted_home  = shellquote($home)
 
   $install_command = "${java} -Dbamboo.home=${quoted_home}\
