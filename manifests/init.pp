@@ -128,7 +128,7 @@ class bamboo_agent(
       fail('Parameter $server_url is required!')
 
     } else {
-      $dep_msg = 'Warning: Parameters $server, $server_port, and $server_protocol are deprecated in the bamboo_agent module, please use $server_url instead'
+      $dep_msg = 'Parameters $server, $server_port, and $server_protocol are deprecated in the bamboo_agent module, please use $server_url instead'
 
       notify { 'bamboo-module-deprecation-warning':
         message  => $dep_msg,
