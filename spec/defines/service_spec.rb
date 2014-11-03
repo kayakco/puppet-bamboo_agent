@@ -4,7 +4,7 @@ describe 'bamboo_agent::service' do
 
   let(:pre_condition) { <<PUPPET
 class bamboo_agent {
-  $user_name = 'zenu'
+  $user_name = 'jdoe'
 }
 include bamboo_agent
 PUPPET
@@ -25,7 +25,7 @@ PUPPET
       :mode    => '0755',
     }
 
-    should contain_file('/etc/init.d/bamboo-agentfoo').with(attributes).with_content(/zenu -c "\/tmp\/bin\/bamboo-agent.sh /)
+    should contain_file('/etc/init.d/bamboo-agentfoo').with(attributes).with_content(/jdoe -c "\/tmp\/bin\/bamboo-agent.sh /)
 
     should contain_service('bamboo-agentfoo').with(
       {

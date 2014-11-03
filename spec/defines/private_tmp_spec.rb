@@ -6,8 +6,8 @@ describe 'bamboo_agent::private_tmp' do
 
   let :pre_condition do <<PUPPET
 class bamboo_agent {
-  $user_name = 'zenu'
-  $user_group = 'zenu'
+  $user_name = 'jdoe'
+  $user_group = 'jdoe'
 }
 include bamboo_agent
 PUPPET
@@ -16,8 +16,8 @@ PUPPET
   it do
     should contain_file('/footmp').with({
       :ensure => 'directory',
-      :owner  => 'zenu',
-      :group  => 'zenu',
+      :owner  => 'jdoe',
+      :group  => 'jdoe',
       :mode   => '0755',
     })
     should contain_package('tmpwatch')

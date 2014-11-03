@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'bamboo_agent::agent' do
   let (:pre_condition) { <<PUPPET
 class bamboo_agent {
-  $user_name = 'zenu'
+  $user_name = 'jdoe'
   $user_group = 'users'
   $install_dir = '/b'
   $default_capabilities = { 'a' => 'foo' }
@@ -26,7 +26,7 @@ PUPPET
     it do
       should contain_file('/b/agent1-home').with({
         :ensure => 'directory',
-        :owner  => 'zenu',
+        :owner  => 'jdoe',
         :group  => 'users',
         :mode   => '0755',
       })

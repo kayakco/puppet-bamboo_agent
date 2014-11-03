@@ -155,7 +155,7 @@ PUPPET
   context 'special user options' do
     let(:params) do {
       :server_url   => 'bamboo.com',
-      :user_name    => 'zenu',
+      :user_name    => 'jdoe',
       :user_options => {
          'group' => 'users',
       },
@@ -163,7 +163,7 @@ PUPPET
     } end
 
     it do
-      should contain_r9util__system_user('zenu').with_group('users')
+      should contain_r9util__system_user('jdoe').with_group('users')
     end
   end
 
