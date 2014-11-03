@@ -20,7 +20,7 @@ Examples
 Install a single Bamboo agent in /usr/local/bamboo.
 
     class { 'bamboo_agent':
-      server_url => 'http://your.bamboo.server:8085.com',
+      server_url => 'http://your.bamboo.server:8085',
     }
 
 
