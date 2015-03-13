@@ -1,9 +1,20 @@
 #!/bin/bash
-# bamboo-agent<%= @agent_id.to_s.ljust(4) %> Init script for running bamboo agent
+# bamboo-agent<%= @id.to_s.ljust(4) %> Init script for running bamboo agent
 #
 # chkconfig:       2345 98 02
 #
-# description:     Starts and stops bamboo agent <%= @agent_id %>
+# description:     Starts and stops bamboo agent <%= @id %>
+### BEGIN INIT INFO
+# Provides:          bamboo-agent<%= @id %>
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start Bamboo Agent <%= @id %>.
+# Description:       Start the Bamboo Agent <%= @id %>.
+### END INIT INFO
 
 # This is just a delegator to the Bamboo agent script.
 
